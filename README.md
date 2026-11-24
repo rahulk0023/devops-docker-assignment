@@ -17,14 +17,17 @@ devops-docker-assignment/
 
 ---
 
-## Bug Fixes
+## Code Improvements
 
-The original `app.py` contained the following bugs:
+The following improvements were made to `app.py` to ensure best practices and compatibility:
 
-| # | Location | Problem | Fix |
-|---|----------|---------|-----|
-| 1 | `app.py` line 1 | `jsonify` was not imported from `flask` | Added `jsonify` to the import: `from flask import Flask, jsonify` |
-| 2 | `/health` route | `return {"status": "ok"}` returns a plain Python dict — older Flask versions raise a `TypeError` and even in Flask 2.x the Content-Type header is not reliably set to `application/json` without `jsonify` | Replaced with `return jsonify({"status": "ok"})` |
+| Area | Explanation |
+|------|-------------|
+| Health endpoint | Explicitly used `jsonify()` to return a proper JSON response with correct `Content-Type: application/json` header, which is best practice regardless of Flask version |
+| Flask startup | App runs with `host="0.0.0.0"` so Docker can expose it outside the container |
+| Port configuration | Host port `5000` mapped to container port `5000` via `EXPOSE 5000` in Dockerfile |
+
+> **Note:** Modern Flask (2.x+) supports returning a plain dictionary as JSON, but explicitly using `jsonify()` is the recommended best practice for clarity and guaranteed header correctness.
 
 ---
 
